@@ -1,19 +1,10 @@
 package main
 
-import "../utils"
-import "core:fmt"
-
+import "./part_1"
 
 main :: proc() {
-	inputFilePath := "./day_1_part_1_input.txt"
-	data := utils.get_file_lines(inputFilePath)
+	test_input1 := "./part_1/test_input.txt"
+	input1 := "./part_1/day_1_part_1_input.txt"
 
-	if len(data) == 0 {
-		fmt.println("no data to parse")
-		return
-	}
-
-	for line, index in data {
-		// TODO: parse data in file
-	}
+	part_1.run(test_input1, true)
 }
