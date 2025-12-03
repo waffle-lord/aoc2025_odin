@@ -5,6 +5,43 @@ import "core:fmt"
 import "core:strconv"
 import "core:strings"
 
+direction :: enum {
+	INVALID,
+	LEFT,
+	RIGHT,
+}
+
+dial_action :: struct {
+	direction: direction,
+	amount:    int,
+}
+
+
+get_dial_action :: proc(line: string) -> dial_action {
+	action := dial_action {
+		direction = direction.INVALID,
+	}
+
+	if strings.has_prefix(line, "R") {
+		action.direction = direction.RIGHT
+	} else if strings.has_prefix(line, "L") {
+		action.direction = direction.LEFT
+	}
+
+	if action.direction == direction.INVALID {
+		return action
+	}
+
+	amount, ok := strconv.parse_int(line[1:])
+
+	if !ok {
+		return action
+	}
+
+	action.amount = amount
+
+	return action
+}
 
 run :: proc(aoc: utils.aoc_data) {
 	acc := 0
@@ -12,28 +49,25 @@ run :: proc(aoc: utils.aoc_data) {
 
 	for line in aoc.data {
 
-		if strings.has_prefix(line, "L") {
+		utils.print_verbose_message(aoc, fmt.aprint("parsing:", line))
 
-			amount, ok := strconv.parse_int(line[1:])
+		action := get_dial_action(line)
 
-			if !ok {
-				utils.print_message(aoc, fmt.aprint("failed to parse amount:", line))
-			}
+		if action.direction == direction.INVALID {
+			continue
+		}
 
-			utils.print_verbose_message(aoc, fmt.aprint("dial:", dial, "\nLEFT: ", amount))
+		remainder := action.amount % 100
 
-			dial -= amount
-		} else if strings.has_prefix(line, "R") {
+		if remainder > 0 {
+			action.amount = remainder
+		}
 
-			amount, ok := strconv.parse_int(line[1:])
-
-			if !ok {
-				utils.print_message(aoc, fmt.aprint("failed to parse amount:", line))
-			}
-
-			utils.print_verbose_message(aoc, fmt.aprint("dial:", dial, "\nRIGHT: ", amount))
-
-			dial += amount
+		#partial switch action.direction {
+		case direction.LEFT:
+			dial -= action.amount
+		case direction.RIGHT:
+			dial += action.amount
 		}
 
 		if dial > 99 {
@@ -43,7 +77,7 @@ run :: proc(aoc: utils.aoc_data) {
 		}
 
 
-		utils.print_verbose_message(aoc, fmt.aprint("->", dial))
+		utils.print_verbose_message(aoc, fmt.aprint("dial NEW ->", dial))
 
 		if dial == 0 {
 			acc += 1

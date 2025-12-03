@@ -46,5 +46,11 @@ load_file_data :: proc(aoc: ^aoc_data) {
 	}
 	defer delete(data, context.allocator)
 
-	aoc.data = strings.split_lines(string(data))
+	lines := strings.split_lines(string(data))
+
+	aoc.data = make([]string, len(lines))
+
+	for v, i in lines {
+		aoc.data[i] = strings.clone(v)
+	}
 }
