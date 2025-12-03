@@ -47,7 +47,7 @@ run :: proc(aoc: utils.aoc_data) {
 	acc := 0
 	dial := 50
 
-	for line in aoc.data {
+	for line in strings.split_lines(string(aoc.data)) {
 
 		utils.print_verbose_message(aoc, fmt.aprint("parsing:", line))
 

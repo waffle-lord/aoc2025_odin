@@ -7,7 +7,7 @@ import "core:strings"
 aoc_data :: struct {
 	tag:             string,
 	print_verbose:   bool,
-	data:            []string,
+	data:            []byte,
 	input_file_path: string,
 }
 
@@ -46,11 +46,9 @@ load_file_data :: proc(aoc: ^aoc_data) {
 	}
 	defer delete(data, context.allocator)
 
-	lines := strings.split_lines(string(data))
+	aoc.data = make([]byte, len(data))
 
-	aoc.data = make([]string, len(lines))
-
-	for v, i in lines {
-		aoc.data[i] = strings.clone(v)
+	for v, i in data {
+		aoc.data[i] = v
 	}
 }
