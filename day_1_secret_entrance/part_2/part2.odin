@@ -44,13 +44,13 @@ get_dial_action :: proc(line: string) -> dial_action {
 	return action
 }
 
-run :: proc(aoc: utils.aoc_data) {
+run :: proc(aoc: utils.aoc_data) -> int {
 	acc := 0
 	dial_position := 50
 
 	for line in strings.split_lines(string(aoc.data)) {
 
-		utils.print_verbose_message(aoc, fmt.aprint("parsing:", line))
+		utils.print_message(aoc, fmt.aprint("parsing:", line), true)
 
 		action := get_dial_action(line)
 
@@ -85,4 +85,5 @@ run :: proc(aoc: utils.aoc_data) {
 	}
 
 	utils.print_message(aoc, fmt.aprint("answer:", acc))
+	return acc
 }

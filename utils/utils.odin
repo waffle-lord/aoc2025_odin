@@ -1,12 +1,11 @@
 package utils
 
 import "core:fmt"
+import "core:log"
 import "core:os"
-import "core:strings"
 
 aoc_data :: struct {
 	tag:             string,
-	print_verbose:   bool,
 	data:            []byte,
 	input_file_path: string,
 }
@@ -28,14 +27,15 @@ get_aoc_data :: proc(tag: string, input_file: string) -> aoc_data {
 	return aoc
 }
 
-print_verbose_message :: proc(aoc: aoc_data, message: string) {
-	if aoc.print_verbose {
-		fmt.println(aoc.tag, "::", message)
-	}
-}
 
-print_message :: proc(aoc: aoc_data, message: string) {
+print_message :: proc(aoc: aoc_data, message: string, debug: bool = false) {
 	fmt.println(aoc.tag, "::", message)
+	if debug {
+		log.debug(aoc.tag, "::", message)
+	} else {
+		log.info(aoc.tag, "::", message)
+	}
+
 }
 
 load_file_data :: proc(aoc: ^aoc_data) {
