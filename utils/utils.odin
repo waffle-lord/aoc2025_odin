@@ -19,32 +19,39 @@ get_aoc_data :: proc(tag: string, input_file: string) -> aoc_data {
 	load_file_data(&aoc)
 
 	if len(aoc.data) == 0 {
-		panic(fmt.aprint("failed to read input file:", aoc.input_file_path))
+		message := fmt.aprint("failed to read input file:", aoc.input_file_path)
+		panic(message)
 	}
 
-	print_message(aoc, fmt.aprint("data is", len(aoc.data), "bytes"))
+	info := fmt.aprint("data is", len(aoc.data), "bytes")
+	defer delete(info)
+	print_message(aoc, info)
 
 	return aoc
 }
 
 
-print_message :: proc(aoc: aoc_data, message: string, debug: bool = false) {
-	fmt.println(aoc.tag, "::", message)
+print_message :: proc(aoc: aoc_data, message: ..any, debug: bool = false) {
+	msgformatted := fmt.aprint(..message)
+	output := fmt.aprint(aoc.tag, "::", msgformatted)
+
 	if debug {
-		log.debug(aoc.tag, "::", message)
+		log.debug(output)
 	} else {
-		log.info(aoc.tag, "::", message)
+		log.info(output)
 	}
 
+	delete(msgformatted)
+	delete(output)
 }
 
 load_file_data :: proc(aoc: ^aoc_data) {
-	data, ok := os.read_entire_file(aoc.input_file_path, context.allocator)
+	data, ok := os.read_entire_file(aoc.input_file_path)
 
 	if !ok {
 		return
 	}
-	defer delete(data, context.allocator)
+	defer delete(data)
 
 	aoc.data = make([]byte, len(data))
 

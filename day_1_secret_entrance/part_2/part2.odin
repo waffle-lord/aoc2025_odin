@@ -48,9 +48,15 @@ run :: proc(aoc: utils.aoc_data) -> int {
 	acc := 0
 	dial_position := 50
 
-	for line in strings.split_lines(string(aoc.data)) {
+	data := string(aoc.data)
+	defer delete(data)
 
-		utils.print_message(aoc, fmt.aprint("parsing:", line), true)
+	it := strings.split_lines(data)
+	defer delete(it)
+
+	for line in &it {
+
+		utils.print_message(aoc, "parsing:", line, debug = true)
 
 		action := get_dial_action(line)
 
@@ -84,6 +90,6 @@ run :: proc(aoc: utils.aoc_data) -> int {
 		}
 	}
 
-	utils.print_message(aoc, fmt.aprint("answer:", acc))
+	utils.print_message(aoc, "answer:", acc)
 	return acc
 }
