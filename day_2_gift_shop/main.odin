@@ -2,21 +2,35 @@ package main
 
 import "../utils"
 import "./part_1"
+import "./part_2/"
+import "base:runtime"
 import "core:fmt"
+import "core:log"
 import "core:mem"
 import "core:testing"
 
 @(test)
 part_1_test :: proc(t: ^testing.T) {
-	expected_answer := u64(1227775554)
-	input_file := utils.get_aoc_data("part 1 TEST", "./test_2_input.txt")
-	answer := part_1.run(input_file)
+	expected_answer := 1227775554
+	test_input := utils.get_aoc_data("part 1 TEST", "./test_input.txt")
+	answer := part_1.run(test_input)
 
-	testing.expect(
-		t,
-		answer == expected_answer,
-		fmt.aprint("answer", answer, "is not equal", expected_answer),
-	)
+	err_message := fmt.aprint("answer", answer, "not equal", expected_answer)
+	defer delete(err_message)
+
+	testing.expect(t, answer == expected_answer, err_message)
+}
+
+//@(test)
+part_2_test :: proc(t: ^testing.T) {
+	expected_answer := 0
+	test_input := utils.get_aoc_data("part 2 TEST", "./test_input.txt")
+	answer := part_2.run(test_input)
+
+	err_message := fmt.aprint("answer", answer, "not equal", expected_answer)
+	defer delete(err_message)
+
+	testing.expect(t, answer == expected_answer, err_message)
 }
 
 main :: proc() {
@@ -39,4 +53,16 @@ main :: proc() {
 		}
 		mem.tracking_allocator_destroy(&track)
 	}
+
+	logger := log.create_console_logger()
+	logger.lowest_level = runtime.Logger_Level.Info
+	defer log.destroy_console_logger(logger)
+	context.logger = logger
+
+	part_1_challenge := utils.get_aoc_data("part 1", "./input.txt")
+	part_1.run(part_1_challenge)
+
+
+	part_2_challenge := utils.get_aoc_data("part 2", "./input.txt")
+	part_2.run(part_2_challenge)
 }
