@@ -21,9 +21,9 @@ part_1_test :: proc(t: ^testing.T) {
 	testing.expect(t, answer == expected_answer, err_message)
 }
 
-//@(test)
+@(test)
 part_2_test :: proc(t: ^testing.T) {
-	expected_answer := 0
+	expected_answer := 4174379265
 	test_input := utils.get_aoc_data("part 2 TEST", "./test_input.txt")
 	answer := part_2.run(test_input)
 
