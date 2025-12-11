@@ -2,10 +2,33 @@ package part2
 
 import "../../utils"
 import "../local_utils"
+import "core:path/filepath"
 import "core:strconv"
 import "core:strings"
 import "core:unicode/utf8"
 
+some_value :: struct {
+	value: int,
+	index: int,
+}
+
+get_largest :: proc(line: string, start: int, end: int) -> some_value {
+
+	largest := some_value {
+		value = -1,
+		index = -1,
+	}
+
+	for v, i in line[start:end] {
+		num := local_utils.get_number(line, i)
+		if num > largest.value {
+			largest.value = num
+			largest.index = i
+		}
+	}
+
+	return largest
+}
 
 run :: proc(aoc: utils.aoc_data) -> int {
 	acc := 0
@@ -17,82 +40,51 @@ run :: proc(aoc: utils.aoc_data) -> int {
 	defer delete(it)
 
 	for line, li in &it {
-
 		utils.print_message(aoc, "starting line: ", li)
-		// reverse array so we only need to push indexes "up" the array (I don't like working backwards :)
-		r_line := strings.reverse(line)
-		defer delete(r_line)
 
-		// setup the first 12 index in the line as our starting indexes
-		arr: [12]int
+		arr := make([dynamic]some_value, 0)
+		defer delete(arr)
 
-		for i in 0 ..< 12 {
-			arr[i] = i
-		}
+		largest := get_largest(line, 0, len(line))
 
-		// starting at 12 (13th element) to begin checking after our initial index setup
-		arr_point := 12
-		point := 11
-		c_end := len(line)
-		current := -1
+		append(&arr, largest)
 
-		for {
-			// TODO: check if last index in arr can be moved up to the last highest value in the line.
-			// Do this until no higher value numbers are found and collect the arr values
-			// join, reverse and convert to int. Add to acc
-			c_num := local_utils.get_number(line, point)
+		fill_remaining := false
 
-			c_start := point + 1
-			arr_point -= 1
-
-			if arr_point == -1 {
-				break
-			}
-
-			utils.print_message(aoc, "start:", c_start, "end:", c_end)
-
-			for i in c_start ..< c_end {
+		if len(line) - 1 - largest.index < 11 {
+			// if we don't have enough digits behind the largest value, take all beyond largest value
+			for v, i in line[largest.index + 1:] {
 				num := local_utils.get_number(line, i)
-
-				utils.print_message(aoc, "num:", num, "/", i, "c_num:", c_num, "/", point)
-
-				if (num > c_num) {
-					utils.print_message(aoc, "current index changed:", current, "->", i)
-					current = i
+				blah := some_value {
+					value = num,
+					index = i,
 				}
+				append(&arr, blah)
 			}
+			// and fill remaining from infront of the largest value
+			fill_remaining = true
+		}
 
-			if current == -1 {
-				// no more numbers to switch
-				break
+		// continue until we have 12 values in our array
+		for len(arr) < 12 {
+			// TODO: How Do
+			// [X] get the largest value
+			// [X] if number of values beyond the largest value is less than 11 (not enough to fill the array), take all of them
+			// [ ] otherwise, search range beyond largest value, to fill array
+			// [ ] take numbers beyond the largest value with higher indexes first
+			// [ ] if needed, fill remaining array with values before largest value, taking largest number with the index closest to the largest value first
+
+
+			if fill_remaining {
+				// we took everything we could behind the largest value and need more, take from in front of it
+
 			} else {
-				utils.print_message(aoc, "ap:", arr[arr_point], "->", current)
-				arr[arr_point] = current
-				c_end = current - 1
+				// take from behind the largest value, we have enough to fill the array
+
 			}
+
 		}
 
-		str_arr: [12]rune
-
-		utils.print_message(aoc, arr, str_arr)
-
-		for v, i in arr {
-			str_arr[i] = rune(line[v])
-		}
-
-		utils.print_message(aoc, arr, str_arr)
-
-		str := utf8.runes_to_string(str_arr[:])
-		defer delete(str)
-
-		n_str, ok := strconv.parse_int(str, 10)
-
-		if !ok {
-			panic("failed to parse int")
-		}
-
-		acc += n_str
-		utils.print_message(aoc, "ACC UPDATED:", acc)
 	}
 
 	return acc
