@@ -1,4 +1,4 @@
-package main
+package local_utils
 
 import "core:fmt"
 import "core:strconv"

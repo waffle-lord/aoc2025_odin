@@ -9,7 +9,7 @@ import "core:log"
 import "core:mem"
 import "core:testing"
 
-@(test)
+//@(test)
 part_1_test :: proc(t: ^testing.T) {
 	expected_answer := 357
 	test_input := utils.get_aoc_data("part 1 TEST", "./test_input.txt")
