@@ -1,7 +1,6 @@
 package part1
 
 import "../../utils"
-import "../local_utils"
 import "core:strings"
 
 pos :: struct {
@@ -29,8 +28,6 @@ run :: proc(aoc: utils.aoc_data) -> int {
 	defer delete(data)
 
 	data = strings.trim(data, "\n")
-
-	utils.print_message(aoc, data)
 
 	lines := strings.split_lines(data)
 	defer delete(lines)
