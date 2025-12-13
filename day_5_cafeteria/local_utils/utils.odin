@@ -14,11 +14,8 @@ range_data :: struct {
 	end:   u64,
 }
 
-
 parse_inventory_data :: proc(input: []byte) -> inventory_data {
-
 	data := string(input)
-	defer delete(data)
 
 	data = strings.trim(data, "\n")
 
