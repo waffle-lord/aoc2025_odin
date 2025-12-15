@@ -34,6 +34,7 @@ remove_uneeded :: proc(aoc: utils.aoc_data, ranges: ^[dynamic]local_utils.range_
 append_ranges :: proc(aoc: utils.aoc_data, ranges: ^[dynamic]local_utils.range_data) {
 
 	ids := make([dynamic]local_utils.range_data, 0)
+	defer delete(ids)
 
 	for range in ranges {
 		utils.print_message(aoc, "checking range:", range, debug = true)
@@ -83,10 +84,10 @@ append_ranges :: proc(aoc: utils.aoc_data, ranges: ^[dynamic]local_utils.range_d
 }
 
 collapse_ranges :: proc(aoc: utils.aoc_data, ranges: ^[dynamic]local_utils.range_data) -> bool {
-
 	was_collasped := false
 
 	ids := make([dynamic]local_utils.range_data, 0)
+	defer delete(ids)
 
 	append(&ids, ..ranges[:])
 
@@ -142,6 +143,8 @@ collapse_ranges :: proc(aoc: utils.aoc_data, ranges: ^[dynamic]local_utils.range
 run :: proc(aoc: utils.aoc_data) -> u64 {
 	acc := u64(0)
 
+	defer delete(aoc.data)
+
 	inventory := local_utils.parse_inventory_data(aoc.data)
 	defer delete(inventory.fresh_id_ranges)
 	delete(inventory.ids)
@@ -157,6 +160,8 @@ run :: proc(aoc: utils.aoc_data) -> u64 {
 	utils.print_message(aoc, "parsing ranges ...")
 
 	ranges := make([dynamic]local_utils.range_data, 0)
+	defer delete(ranges)
+
 	append(&ranges, ..local_utils.parse_ranges(inventory.fresh_id_ranges[:]))
 
 	utils.print_message(aoc, len(ranges), "parsed")
