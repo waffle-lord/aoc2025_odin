@@ -23,7 +23,7 @@ part_1_test :: proc(t: ^testing.T) {
 
 @(test)
 part_2_test :: proc(t: ^testing.T) {
-	expected_answer := 14
+	expected_answer := u64(14)
 	test_input := utils.get_aoc_data("part 2 TEST", "./test_input.txt")
 	answer := part_2.run(test_input)
 
